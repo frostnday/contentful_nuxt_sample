@@ -8,7 +8,6 @@
 <script>
   import { BLOCKS } from '@contentful/rich-text-types';
   import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
-import { async } from 'q';
   const Articls = require('~/static/json/article.json');
 
   export default {
@@ -19,7 +18,8 @@ import { async } from 'q';
     },
     computed: {
       article(){
-        return Articls.items.find(i => i.fields.id == this.id);
+        const id = this.$router.params.id;
+        return Articls.items.find(i => i.fields.id == id);
       }
     },
     methods: {

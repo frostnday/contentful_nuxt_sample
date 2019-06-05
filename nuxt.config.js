@@ -1,14 +1,16 @@
-const Articls = require('./static/json/article.json');
+import Articls from './static/json/article.json';
+import outputStaticDataBeforeBuild from './modules/createStaticJson';
 
 module.exports = {
-  modules: [
-    '~/modules/createStaticJson.js',
-  ],
   generate: {
-    routes() {
+    async routes() {
+      // contentfulからデータを取得してjsonにexportする
+      await outputStaticDataBeforeBuild();
+
+      // 取得したjsonからページを動的生成する
       return Articls.items.map(i => {
         return `articles/${i.fields.id}`;
-      })
+      });
     }
   },
   /*

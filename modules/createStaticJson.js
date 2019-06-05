@@ -1,27 +1,29 @@
 import { createClient } from '../plugins/contentful.js'
-const env = require('../env.js');
-const fs = require('fs');
+import env from '../env.js';
+import fs from 'fs';
 
 const outputPath = 'static/json/article.json'
 
-module.exports = function outputStaticDataBeforeBuild() {
-  this.nuxt.hook('build:before', async builder => {
-    const client = createClient()
-    // contentfulからデータを取得する
-    const posts = await client.getEntries({
-      'content_type': env.CTF_BLOG_POST_TYPE_ID,
-      order: '-sys.createdAt'
-    })
+/**
+ * Contentfulから取得したデータをjsonファイルとして出力します。
+ */
+export default async function outputStaticDataBeforeBuild() {
+  const client = createClient()
 
-    // jsonとして出力する
-    fs.writeFile(
-      outputPath,
-      JSON.stringify(posts),
-      err => {
-        if (err) {
-          throw err;
-        }
-      },
-    );
-  });
+  // contentfulからデータを取得
+  const articles = await client.getEntries({
+    'content_type': env.CTF_BLOG_POST_TYPE_ID,
+    order: '-sys.createdAt'
+  })
+
+  // jsonとして出力する
+  fs.writeFile(
+    outputPath,
+    JSON.stringify(articles),
+    err => {
+      if (err) {
+        throw err;
+      }
+    },
+  );
 };
